@@ -2,6 +2,7 @@ package worker
 
 import (
 	"fmt"
+	"net/http"
 	"steamview-go/aligndb"
 	"steamview-go/steam"
 	"sync"
@@ -61,6 +62,16 @@ func genMessage() Message {
 		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
 	}
 	return Message{Logo: logo, Hero: hero, Align: align}
+}
+
+func SetAlign(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" && appID > 0 {
+		_ = r.ParseForm()
+		align := r.Form.Get("submit")
+		aligndb.SetAlign(appID, align)
+		forceRefresh = true
+	}
+	http.ServeFile(w, r, "./assets/align.html")
 }
 
 func Serve() {
