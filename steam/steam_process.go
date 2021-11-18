@@ -4,7 +4,7 @@
 package steam
 
 import (
-	"github.com/mitchellh/go-ps"
+	ps "github.com/shirou/gopsutil/process"
 	"regexp"
 	"strconv"
 )
@@ -16,7 +16,10 @@ func GetAppId() uint64 {
 
 	arr, _ := ps.Processes()
 	for _, process := range arr {
-		str := process.Executable()
+		str, err := process.Cmdline()
+		if err != nil {
+			continue
+		}
 		parse := split.FindStringSubmatch(str)
 		if parse != nil {
 			result, _ = strconv.ParseUint(parse[1], 10, 64)
