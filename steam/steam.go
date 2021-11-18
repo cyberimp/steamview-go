@@ -1,34 +1,12 @@
 package steam
 
 import (
-	"golang.org/x/sys/windows/registry"
-	"log"
 	"net/http"
 	"path"
 	"regexp"
-	"runtime"
 )
 
-var ImgRoot string
-
-func init() {
-	os := runtime.GOOS
-	if os == "windows" {
-		k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Valve\Steam`, registry.QUERY_VALUE)
-		if err != nil {
-			log.Fatal(err, "! Do you have Steam installed?")
-		}
-		defer k.Close()
-
-		root, _, err := k.GetStringValue("SteamPath")
-		if err != nil {
-			log.Fatal(err, "! Do you have Steam installed?")
-		}
-		ImgRoot = path.Join(root, "appcache", "librarycache")
-	} else {
-		ImgRoot = path.Join("~", ".steam", "appcache", "librarycache")
-	}
-}
+var imgRoot string
 
 func ServeCache(w http.ResponseWriter, r *http.Request) {
 
@@ -49,29 +27,10 @@ func ServeCache(w http.ResponseWriter, r *http.Request) {
 	var fullPath string
 
 	if parse[1] == "hero" {
-		fullPath = path.Join(ImgRoot, parse[2]+"_library_hero.jpg")
+		fullPath = path.Join(imgRoot, parse[2]+"_library_hero.jpg")
 	} else {
-		fullPath = path.Join(ImgRoot, parse[2]+"_logo.png")
+		fullPath = path.Join(imgRoot, parse[2]+"_logo.png")
 	}
 
 	http.ServeFile(w, r, fullPath)
-}
-
-func GetAppId() uint64 {
-	os := runtime.GOOS
-	if os != "windows" {
-		//TODO: linux/mac check for running app
-		return 0
-	}
-	k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Valve\Steam`, registry.QUERY_VALUE)
-	if err != nil {
-		log.Fatal(err, "! Do you have Steam installed?")
-	}
-	defer k.Close()
-
-	result, _, err := k.GetIntegerValue("RunningAppID")
-	if err != nil {
-		log.Fatal(err, "! Do you have Steam installed?")
-	}
-	return result
 }
