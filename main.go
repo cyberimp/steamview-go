@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
-	"steamView/steam"
-	"steamView/worker"
-	"steamView/wsserver"
+	"steamview-go/steam"
+	"steamview-go/worker"
+	"steamview-go/wsserver"
 )
 
 func main() {

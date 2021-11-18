@@ -2,7 +2,8 @@ package worker
 
 import (
 	"fmt"
-	"steamView/steam"
+	"steamview-go/aligndb"
+	"steamview-go/steam"
 	"sync"
 	"time"
 )
@@ -22,9 +23,8 @@ var (
 )
 
 const (
-	defaultHero  = "/images/no_hero.png"
-	defaultLogo  = "/images/default.png"
-	defaultAlign = "left"
+	defaultHero = "/images/no_hero.png"
+	defaultLogo = "/images/default.png"
 )
 
 func GetChan() (chan Message, uint) {
@@ -55,11 +55,10 @@ func sendAll(m Message) {
 func genMessage() Message {
 	logo := defaultLogo
 	hero := defaultHero
-	align := "absolute-center"
+	align := aligndb.GetAlign(appID)
 	if appID > 0 {
 		logo = fmt.Sprintf("/cache/logo_%d.png", appID)
 		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
-		align = defaultAlign
 	}
 	return Message{Logo: logo, Hero: hero, Align: align}
 }

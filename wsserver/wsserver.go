@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	"steamView/worker"
+	"steamview-go/worker"
 )
 
 type Client struct {
@@ -22,7 +22,7 @@ func (c Client) Loop() {
 	for i := range c.ch {
 		err := c.soc.WriteJSON(i)
 		if err != nil {
-			log.Println(err)
+			//that's nice, conn closed
 			return
 		}
 	}
