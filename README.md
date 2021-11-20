@@ -5,9 +5,9 @@ game in Steam on separate display (banner displays are
 recommended), written in Javascript and ported to Go. When game 
 has no logo, or no game is running, displays Steam logo.
 
-Now works only on Windows and Linux, if you know, how to detect
-running Steam game on macOS/other OSes with native Steam, 
-message me or make a PR (Steam handling logic is in `./steam/`)
+Now works only on Windows and Linux, if you know how to detect
+running Steam game on macOS, message me or make a PR (Steam 
+handling logic is in `./steam/`)
 
 
 ## How to use

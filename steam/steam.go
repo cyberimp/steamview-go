@@ -1,3 +1,4 @@
+// Package steam provides detection of current running game and serving cache folder
 package steam
 
 import (
