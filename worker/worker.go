@@ -18,6 +18,7 @@ type Message struct {
 var (
 	receivers    map[uint]chan Message
 	forceRefresh = false
+	panicFlag    = false
 	counter      uint
 	lock         sync.Mutex
 	appID        uint64
@@ -74,10 +75,18 @@ func SetAlign(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./assets/align.html")
 }
 
+func Panic() {
+	panicFlag = true
+}
+
 func Serve() {
 	receivers = map[uint]chan Message{}
 	for range time.Tick(time.Second / 3) {
 		newAppID := steam.GetAppId()
+		if panicFlag {
+			sendAll(Message{Hero: defaultHero, Align: "absolute-center", Logo: "/images/error.png"})
+			break
+		}
 		if appID != newAppID || forceRefresh {
 			appID = newAppID
 			sendAll(genMessage())

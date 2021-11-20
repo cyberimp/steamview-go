@@ -3,6 +3,9 @@ let socket = new WebSocket("ws://" + host + "/socket");
 let logo = document.getElementById("logo");
 let hero = document.getElementById("hero");
 
+let img = new Image();
+
+img.src = "/images/error.png" //cache image for display on shutdown
 
 function LogoError() {
     logo.classList.remove("left", "right", "center", "absolute-center", "left-stretch", "hidden");
