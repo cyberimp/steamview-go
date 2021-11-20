@@ -22,6 +22,8 @@ var (
 	counter      uint
 	lock         sync.Mutex
 	appID        uint64
+	blocker      chan int
+	ticker       *time.Ticker
 )
 
 const (
@@ -35,6 +37,7 @@ func GetChan() (chan Message, uint) {
 	result := make(chan Message)
 	receivers[counter] = result
 	counter++
+	blocker <- 1
 	forceRefresh = true
 	return result, counter - 1
 }
@@ -77,20 +80,39 @@ func SetAlign(w http.ResponseWriter, r *http.Request) {
 
 func Panic() {
 	panicFlag = true
+	blocker <- 1
 }
 
 func Serve() {
 	receivers = map[uint]chan Message{}
-	for range time.Tick(time.Second / 3) {
-		newAppID := steam.GetAppId()
-		if panicFlag {
-			sendAll(Message{Hero: defaultHero, Align: "absolute-center", Logo: "/images/error.png"})
-			break
-		}
-		if appID != newAppID || forceRefresh {
-			appID = newAppID
-			sendAll(genMessage())
-			forceRefresh = false
+
+	blocker = make(chan int)
+	ticker = time.NewTicker(time.Second / 3)
+
+	for {
+		select {
+		case <-ticker.C:
+			if trySend() {
+				return
+			}
+		case <-blocker:
+			if trySend() {
+				return
+			}
 		}
 	}
+}
+
+func trySend() bool {
+	if panicFlag {
+		sendAll(Message{Hero: defaultHero, Align: "absolute-center", Logo: "/images/error.png"})
+		return true
+	}
+	newAppID := steam.GetAppId()
+	if appID != newAppID || forceRefresh {
+		appID = newAppID
+		sendAll(genMessage())
+		forceRefresh = false
+	}
+	return false
 }
