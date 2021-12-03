@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"steamview-go/steam"
+	"steamview-go/trayicon"
 	"steamview-go/worker"
 	"steamview-go/wsserver"
 	"syscall"
@@ -18,10 +19,7 @@ import (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	http.HandleFunc("/socket", wsserver.ServeWs)
-	http.HandleFunc("/align", worker.SetAlign)
-	http.HandleFunc("/cache/", steam.ServeCache)
-	http.Handle("/", http.FileServer(http.Dir("./assets")))
+	setupHandles()
 
 	go worker.Serve()
 
@@ -33,12 +31,10 @@ func main() {
 
 	httpServer.RegisterOnShutdown(func() {
 		worker.Panic()
-		time.Sleep(time.Second / 2)
 	})
 
 	go func() {
 		if err := httpServer.ListenAndServe(); err != http.ErrServerClosed {
-			// it is fine to use Fatal here because it is not main gorutine
 			log.Fatalf("HTTP server ListenAndServe: %v", err)
 		}
 	}()
@@ -52,8 +48,13 @@ func main() {
 		syscall.SIGQUIT, // kill -SIGQUIT XXXX
 	)
 
-	<-signalChan
-	log.Println("os.Interrupt - shutting down...")
+	quitChan := make(chan struct{})
+	trayicon.Run(quitChan)
+
+	select {
+	case <-signalChan:
+	case <-quitChan:
+	}
 
 	gracefulCtx, cancelShutdown := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelShutdown()
@@ -62,7 +63,12 @@ func main() {
 		log.Fatalln("shutdown error: ", err)
 	}
 
-	time.Sleep(time.Second / 2)
-
 	cancel()
+}
+
+func setupHandles() {
+	http.HandleFunc("/socket", wsserver.ServeWs)
+	http.HandleFunc("/align", worker.SetAlign)
+	http.HandleFunc("/cache/", steam.ServeCache)
+	http.Handle("/", http.FileServer(http.Dir("./assets")))
 }

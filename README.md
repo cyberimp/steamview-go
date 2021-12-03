@@ -9,10 +9,17 @@ Now works only on Windows and Linux, if you know how to detect
 running Steam game on macOS, message me or make a PR (Steam 
 handling logic is in `./steam/`)
 
+## Dependencies
+
+This project needs [go-winres](https://github.com/tc-hib/go-winres) 
+for Windows and `libgtk-3-dev` `libappindicator3-dev` for Debian 
+and Ubuntu (Mint users should also install `liblibxapp-dev`)
+
 
 ## How to use
 
 Run `go build` in project directory, and you are ready to go.
+For Windows use `go generate` and `go build -ldflags "-H=windowsgui"`
 Start `steamview-go.exe` in project directory, and connect to
 <http://YOUR_IP:3000> with your favourite browser (don't forget to 
 drag it to your cool monitor, modded into case and put it in 
