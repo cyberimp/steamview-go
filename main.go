@@ -54,7 +54,6 @@ func main() {
 	<-signalChan
 	log.Println("os.Interrupt - shutting down...")
 
-	//	worker.Panic()
 	gracefulCtx, cancelShutdown := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelShutdown()
 	err := httpServer.Shutdown(gracefulCtx)
