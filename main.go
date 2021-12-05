@@ -50,6 +50,7 @@ func main() {
 
 	quitChan := make(chan struct{})
 	trayicon.Run(quitChan)
+	defer trayicon.Quit()
 
 	select {
 	case <-signalChan:

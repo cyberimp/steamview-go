@@ -16,14 +16,15 @@ func Run(quit chan struct{}) {
 func onReady() {
 	systray.SetIcon(icon.GetIcon())
 	systray.SetTitle("Awesome App")
-	mOpen := systray.AddMenuItem("Open browser", "Open app in browser")
-	mAlign := systray.AddMenuItem("Set align", "Set align for current banner")
-	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
+	mOpen := systray.AddMenuItem("Open &browser", "Open app in browser")
+	mAlign := systray.AddMenuItem("Set &align", "Set align for current banner")
+	mQuitOrig := systray.AddMenuItem("&Quit", "Quit the whole app")
 
 	go func() {
 		for {
 			select {
 			case <-mQuitOrig.ClickedCh:
+				quitChan <- struct{}{}
 				systray.Quit()
 				return
 			case <-mOpen.ClickedCh:
@@ -36,5 +37,9 @@ func onReady() {
 }
 
 func onExit() {
-	quitChan <- struct{}{}
+
+}
+
+func Quit() {
+	systray.Quit()
 }
