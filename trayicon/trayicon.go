@@ -15,11 +15,12 @@ func Run(quit chan struct{}) {
 
 func onReady() {
 	systray.SetIcon(icon.GetIcon())
-	systray.SetTitle("Awesome App")
-	mOpen := systray.AddMenuItem("Open &browser", "Open app in browser")
-	mAlign := systray.AddMenuItem("Set &align", "Set align for current banner")
-	mQuitOrig := systray.AddMenuItem("&Quit", "Quit the whole app")
+	systray.SetTitle("SteamView")
+	mOpen := systray.AddMenuItem("Open browser", "Open app in browser")
+	mAlign := systray.AddMenuItem("Set align", "Set align for current banner")
+	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 
+	_ = browser.OpenURL("http://127.0.0.1:3000")
 	go func() {
 		for {
 			select {

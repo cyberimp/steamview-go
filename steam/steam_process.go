@@ -12,7 +12,7 @@ import (
 func GetAppId() uint64 {
 	var result uint64
 
-	split := regexp.MustCompile(`SteamLaunch AppId=(\d+) `)
+	split := regexp.MustCompile(`/gameoverlayui.*-gameid (\d+)$`)
 
 	arr, _ := ps.Processes()
 	for _, process := range arr {

@@ -14,6 +14,13 @@ function LogoError() {
 logo.onerror = LogoError;
 
 socket.onmessage = (msg) => {
+    /**
+     * message from server should include this fields
+     * @type {object} message
+     * @property {string} align - align of logo on hero
+     * @property {string} hero - image path for background of banner
+     * @property {string} logo - image path for game logo
+     */
     let message = JSON.parse(msg.data);
     logo.classList.remove("left", "right", "center", "absolute-center", "left-stretch", "hidden");
     logo.classList.add(message.align);
