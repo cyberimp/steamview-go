@@ -5,8 +5,7 @@ let hero = document.getElementById("hero");
 
 
 function LogoError() {
-    logo.classList.remove(...logo.classList);
-    logo.classList.add("hidden");
+    logo.className = "hidden";
     logo.onerror = null;
     return true;
 }
@@ -22,8 +21,7 @@ socket.onmessage = (msg) => {
      * @property {string} logo - image path for game logo
      */
     let message = JSON.parse(msg.data);
-    logo.classList.remove(...logo.classList);
-    logo.classList.add(message.align);
+    logo.className = message.align;
     logo.onerror = LogoError;
     logo.src = message.logo;
     hero.src = message.hero;
