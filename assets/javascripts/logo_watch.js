@@ -22,10 +22,12 @@ socket.onmessage = (msg) => {
      * @property {string} align - align of logo on hero
      * @property {string} hero - image path for background of banner
      * @property {string} logo - image path for game logo
+     * @property {string} width - logo width in percents
+     * @property {string} height - logo height in percents
      */
     let message = JSON.parse(msg.data);
     logo.className = message.align;
-    logo.style.width = message.width + "%"
+    logo.style.width = (message.align === "BottomLeft")?message.width/2:message.width + "%"
     logo.style.height = message.height + "%"
     logo.onerror = LogoError;
     logo.src = message.logo;
