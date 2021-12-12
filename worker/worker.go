@@ -2,17 +2,18 @@ package worker
 
 import (
 	"fmt"
-	"net/http"
-	"steamview-go/aligndb"
+	"steamview-go/appinfo"
 	"steamview-go/steam"
 	"sync"
 	"time"
 )
 
 type Message struct {
-	Logo  string `json:"logo"`
-	Hero  string `json:"hero"`
-	Align string `json:"align"`
+	Logo   string `json:"logo"`
+	Hero   string `json:"hero"`
+	Align  string `json:"align"`
+	Width  string `json:"width"`
+	Height string `json:"height"`
 }
 
 var (
@@ -60,22 +61,22 @@ func sendAll(m Message) {
 func genMessage() Message {
 	logo := defaultLogo
 	hero := defaultHero
-	align := aligndb.GetAlign(appID)
+	align := "CenterCenter"
+	width := "50"
+	height := "50"
 	if appID > 0 {
 		logo = fmt.Sprintf("/cache/logo_%d.png", appID)
 		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
+		info := appinfo.GetAppInfo(uint32(appID))
+		align = info.GetAlign()
+		if align == "" {
+			align = "hidden"
+		} else {
+			width = info.GetWidth()
+			height = info.GetHeight()
+		}
 	}
-	return Message{Logo: logo, Hero: hero, Align: align}
-}
-
-func SetAlign(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" && appID > 0 {
-		_ = r.ParseForm()
-		align := r.Form.Get("submit")
-		aligndb.SetAlign(appID, align)
-		forceRefresh = true
-	}
-	http.ServeFile(w, r, "./assets/align.html")
+	return Message{Logo: logo, Hero: hero, Align: align, Width: width, Height: height}
 }
 
 func Panic() {

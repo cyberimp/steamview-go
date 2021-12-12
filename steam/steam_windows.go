@@ -20,7 +20,8 @@ func init() {
 	if err != nil {
 		log.Fatal(err, "! Do you have Steam installed?")
 	}
-	imgRoot = path.Join(root, "appcache", "librarycache")
+	CacheRoot = path.Join(root, "appcache")
+	imgRoot = path.Join(CacheRoot, "librarycache")
 }
 
 func GetAppId() uint64 {

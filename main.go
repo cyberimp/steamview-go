@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"steamview-go/appinfo"
 	"steamview-go/steam"
 	"steamview-go/trayicon"
 	"steamview-go/worker"
@@ -20,6 +21,10 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	setupHandles()
+
+	log.Print("parsing appinfo.vdf...")
+	appinfo.Parse()
+	log.Println("OK!")
 
 	go worker.Serve()
 
@@ -69,7 +74,6 @@ func main() {
 
 func setupHandles() {
 	http.HandleFunc("/socket", wsserver.ServeWs)
-	http.HandleFunc("/align", worker.SetAlign)
 	http.HandleFunc("/cache/", steam.ServeCache)
 	http.Handle("/", http.FileServer(http.Dir("./assets")))
 }

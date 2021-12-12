@@ -7,7 +7,10 @@ import (
 	"regexp"
 )
 
-var imgRoot string
+var (
+	imgRoot   string
+	CacheRoot string
+)
 
 func ServeCache(w http.ResponseWriter, r *http.Request) {
 

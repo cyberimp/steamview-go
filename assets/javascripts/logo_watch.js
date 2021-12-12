@@ -3,7 +3,10 @@ let socket = new WebSocket("ws://" + host + "/socket");
 let logo = document.getElementById("logo");
 let hero = document.getElementById("hero");
 
-
+/**
+ * hides logo on 404
+ * @returns {boolean}
+ */
 function LogoError() {
     logo.className = "hidden";
     logo.onerror = null;
@@ -22,6 +25,8 @@ socket.onmessage = (msg) => {
      */
     let message = JSON.parse(msg.data);
     logo.className = message.align;
+    logo.style.width = message.width + "%"
+    logo.style.height = message.height + "%"
     logo.onerror = LogoError;
     logo.src = message.logo;
     hero.src = message.hero;

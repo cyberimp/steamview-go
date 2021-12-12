@@ -7,5 +7,6 @@ import (
 
 func init() {
 	homeDir, _ := os.UserHomeDir()
-	imgRoot = path.Join(homeDir, "Library", "Application Support", "Steam", "appcache", "librarycache")
+	CacheRoot = path.Join(homeDir, "Library", "Application Support", "Steam", "appcache")
+	imgRoot = path.Join(CacheRoot, "librarycache")
 }

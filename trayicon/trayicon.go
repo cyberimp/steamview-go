@@ -17,7 +17,6 @@ func onReady() {
 	systray.SetIcon(icon.GetIcon())
 	systray.SetTitle("SteamView")
 	mOpen := systray.AddMenuItem("Open browser", "Open app in browser")
-	mAlign := systray.AddMenuItem("Set align", "Set align for current banner")
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 
 	_ = browser.OpenURL("http://127.0.0.1:3000")
@@ -30,8 +29,6 @@ func onReady() {
 				return
 			case <-mOpen.ClickedCh:
 				_ = browser.OpenURL("http://127.0.0.1:3000")
-			case <-mAlign.ClickedCh:
-				_ = browser.OpenURL("http://127.0.0.1:3000/align")
 			}
 		}
 	}()
