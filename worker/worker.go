@@ -14,6 +14,7 @@ type Message struct {
 	Align  string `json:"align"`
 	Width  string `json:"width"`
 	Height string `json:"height"`
+	Name   string `json:"name"`
 }
 
 var (
@@ -64,11 +65,13 @@ func genMessage() Message {
 	align := "CenterCenter"
 	width := "50"
 	height := "50"
+	name := "Steam"
 	if appID > 0 {
 		logo = fmt.Sprintf("/cache/logo_%d.png", appID)
 		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
 		info := appinfo.GetAppInfo(uint32(appID))
 		align = info.GetAlign()
+		name = info.GetName()
 		if align == "" {
 			align = "hidden"
 		} else {
@@ -76,7 +79,7 @@ func genMessage() Message {
 			height = info.GetHeight()
 		}
 	}
-	return Message{Logo: logo, Hero: hero, Align: align, Width: width, Height: height}
+	return Message{Logo: logo, Hero: hero, Align: align, Width: width, Height: height, Name: name}
 }
 
 func Panic() {
