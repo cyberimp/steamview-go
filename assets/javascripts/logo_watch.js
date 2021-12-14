@@ -1,3 +1,5 @@
+"use strict";
+
 let host = window.location.host;
 let socket = new WebSocket("ws://" + host + "/socket");
 let logo = document.getElementById("logo");
@@ -30,11 +32,11 @@ socket.onmessage = (msg) => {
      */
     let message = JSON.parse(msg.data);
     logo.className = message.align;
-    logo.style.width = (message.align === "BottomLeft")?message.width/2:message.width + "%"
-    logo.style.height = message.height + "%"
+    logo.style.width = (message.align === "BottomLeft")?message.width/2:message.width + "%";
+    logo.style.height = message.height + "%";
 
-    name.innerText = message.name
-    name.className = (message.align === "hidden")?"":"hidden"
+    name.innerText = message.name;
+    name.className = (message.align === "hidden")?"":"hidden";
 
     logo.onerror = LogoError;
     logo.src = message.logo;

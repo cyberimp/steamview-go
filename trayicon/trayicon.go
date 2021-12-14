@@ -10,6 +10,8 @@ var quitChan chan struct{}
 
 func Run(quit chan struct{}) {
 	quitChan = quit
+	_ = browser.OpenURL("http://127.0.0.1:3000")
+
 	go systray.Run(onReady, onExit)
 }
 
@@ -19,7 +21,6 @@ func onReady() {
 	mOpen := systray.AddMenuItem("Open browser", "Open app in browser")
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 
-	_ = browser.OpenURL("http://127.0.0.1:3000")
 	go func() {
 		for {
 			select {
