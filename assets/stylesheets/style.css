@@ -2,11 +2,20 @@
   font-family: "Motiva Sans";
   src: url("/fonts/MotivaSansThin.ttf");
 }
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: black;
   color: #00B7FF;
+}
+
+div#container {
+  position: absolute;
+  top: 0;
+  bottom: 32px;
+  left: 0;
+  width: 100%;
 }
 
 img#logo{
@@ -54,7 +63,6 @@ img#logo.CenterCenter{
 
 img#logo.BottomCenter{
   left: 50%;
-  bottom: 0;
   transform: translate(-50%, 0);
 }
 
