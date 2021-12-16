@@ -93,6 +93,7 @@ func (i *AppInfo) GetHeight() string {
 	return i.GetValue("appinfo:common:library_assets:logo_position:height_pct")
 }
 
+//GetName returns name of game
 func (i *AppInfo) GetName() string {
 	return i.GetValue("appinfo:common:name")
 }
@@ -106,6 +107,7 @@ func readUint32(f io.Reader) string {
 	return fmt.Sprintf("%d", ch)
 }
 
+//readCString reads C string of variable width from file
 func readCString(f io.Reader) string {
 	var sb strings.Builder
 	ch := make([]byte, 1)
@@ -153,7 +155,9 @@ func readNode(r io.Reader) *Node {
 var collection []AppInfo
 
 func GetAppInfo(appId uint32) AppInfo {
-	num := sort.Search(len(collection), func(i int) bool { return collection[i].Header.AppId >= appId })
+	num := sort.Search(len(collection), func(i int) bool {
+		return collection[i].Header.AppId >= appId
+	})
 	if num < len(collection) {
 		return collection[num]
 	} else {
@@ -179,15 +183,15 @@ func Parse() {
 		var curApp AppInfo
 		err = binary.Read(f, binary.LittleEndian, &curApp.Header)
 		if err != nil {
-			if err == io.ErrUnexpectedEOF {
-				break
-			}
+			if err == io.ErrUnexpectedEOF { // actually, we should read uint32 appID first, check it
+				break // for 0x00000000 value, breaking out if true, but it includes extra Seek call
+			} // every appid or changing AppInfo header struct, so we just bounce when file is ended
 			panic(err)
 		}
 
 		curApp.Root = readNode(f)
 
-		_ = readNode(f) //extra nil node at end
+		_ = readNode(f) //extra typeEndArray node at end of tree data, returns nil
 		collection = append(collection, curApp)
 	}
 }

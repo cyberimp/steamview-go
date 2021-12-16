@@ -14,8 +14,8 @@
     "#1": {
       "0409": {
         "identity": {
-          "name": "",
-          "version": ""
+          "name": "steamview",
+          "version": "1.0.0"
         },
         "description": "",
         "minimum-os": "win7",
@@ -44,17 +44,17 @@
         },
         "info": {
           "0409": {
-            "Comments": "",
-            "CompanyName": "",
-            "FileDescription": "",
+            "Comments": "View banner of current running game",
+            "CompanyName": "https://github.com/cyberimp",
+            "FileDescription": "View banner of current running game",
             "FileVersion": "",
             "InternalName": "",
-            "LegalCopyright": "",
+            "LegalCopyright": "https://github.com/cyberimp",
             "LegalTrademarks": "",
             "OriginalFilename": "",
             "PrivateBuild": "",
-            "ProductName": "",
-            "ProductVersion": "",
+            "ProductName": "steamview",
+            "ProductVersion": "1.0.0",
             "SpecialBuild": ""
           }
         }
