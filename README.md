@@ -1,3 +1,17 @@
+## Screenshots
+
+### With no game running
+
+![Default display](/screenshots/default-display.png)
+
+### With Streets of Rage running
+
+![SoR 4 display](/screenshots/sor4-display.png)
+
+### With Crypt of Necrodancer running
+
+![Crypt of Necrodancer display](/screenshots/cotn-display.png)
+
 # Steam game display
 
 This app is tool for displaying logo of currently running
@@ -27,17 +41,3 @@ folder, it should be in same folder as binary.
 
 Steam is &trade; & &reg; of Valve Corporation, I'm not affiliated 
 with them.
-
-## Screenshots
-
-### With no game running
-
-![Default display](/screenshots/default-display.png)
-
-### With Streets of Rage running
-
-![SoR 4 display](/screenshots/sor4-display.png)
-
-### With Crypt of Necrodancer running
-
-![Crypt of Necrodancer display](/screenshots/cotn-display.png)
