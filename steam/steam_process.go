@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func GetAppId() uint64 {
+func GetAppId() uint32 {
 	var result uint64
 
 	split := regexp.MustCompile(`/gameoverlayui.*-gameid (\d+)$`)
@@ -22,9 +22,9 @@ func GetAppId() uint64 {
 		}
 		parse := split.FindStringSubmatch(str)
 		if parse != nil {
-			result, _ = strconv.ParseUint(parse[1], 10, 64)
-			return result
+			result, _ = strconv.ParseUint(parse[1], 10, 32)
+			return uint32(result)
 		}
 	}
-	return result
+	return uint32(result)
 }

@@ -30,6 +30,8 @@ const (
 	typeArray byte = iota
 	typeString
 	typeUint32
+	//there are lotta types, but only string, uint32, and subtree markers are used
+	//btw float values are strings and time values are uint32
 	typeEndArray byte = 8
 )
 
@@ -59,6 +61,7 @@ func (n *Node) String() string {
 	return sb.String()
 }
 
+// GetValue gets value from tree, path separator is ':'
 func (n *Node) GetValue(path string) string {
 	if path == n.Name {
 		return n.Value
@@ -77,6 +80,7 @@ func (n *Node) GetValue(path string) string {
 	return ""
 }
 
+// GetValue gets value from root of tree
 func (i *AppInfo) GetValue(path string) string {
 	return i.Root.GetValue(path)
 }
@@ -123,6 +127,7 @@ func readCString(f io.Reader) string {
 	}
 }
 
+//readNode reads tree recursively
 func readNode(r io.Reader) *Node {
 	curNode := new(Node)
 	var nodeType byte

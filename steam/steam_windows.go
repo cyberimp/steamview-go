@@ -24,7 +24,7 @@ func init() {
 	imgRoot = path.Join(CacheRoot, "librarycache")
 }
 
-func GetAppId() uint64 {
+func GetAppId() uint32 {
 	k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Valve\Steam`, registry.QUERY_VALUE)
 	if err != nil {
 		log.Fatal(err, "! Do you have Steam installed?")
@@ -38,5 +38,5 @@ func GetAppId() uint64 {
 	if err != nil {
 		log.Fatal(err, "! Do you have Steam installed?")
 	}
-	return result
+	return uint32(result)
 }

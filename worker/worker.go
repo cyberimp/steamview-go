@@ -23,7 +23,7 @@ var (
 	panicFlag    = false
 	counter      uint
 	lock         sync.Mutex
-	appID        uint64
+	appID        uint32
 	blocker      chan int
 	ticker       *time.Ticker
 )
@@ -69,7 +69,7 @@ func genMessage() Message {
 	if appID > 0 {
 		logo = fmt.Sprintf("/cache/logo_%d.png", appID)
 		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
-		info := appinfo.GetAppInfo(uint32(appID))
+		info := appinfo.GetAppInfo(appID)
 		align = info.GetAlign()
 		name = info.GetName()
 		if align == "" {
