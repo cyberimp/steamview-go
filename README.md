@@ -15,7 +15,6 @@ This project needs [go-winres](https://github.com/tc-hib/go-winres)
 for Windows and `libgtk-3-dev` `libappindicator3-dev` for Debian 
 and Ubuntu (Mint users should also install `libxapp-dev`)
 
-
 ## How to use
 
 Run `go build` in project directory, and you are ready to go.
@@ -28,3 +27,17 @@ folder, it should be in same folder as binary.
 
 Steam is &trade; & &reg; of Valve Corporation, I'm not affiliated 
 with them.
+
+## Screenshots
+
+### With no game running
+
+![Default display](/screenshots/default-display.png)
+
+### With Streets of Rage running
+
+![SoR 4 display](/screenshots/sor4-display.png)
+
+### With Crypt of Necrodancer running
+
+![Crypt of Necrodancer display](/screenshots/cotn-display.png)
