@@ -4,7 +4,7 @@
 
 ![Default display](/screenshots/default-display.png)
 
-### With Streets of Rage running
+### With Streets of Rage 4 running
 
 ![SoR 4 display](/screenshots/sor4-display.png)
 
