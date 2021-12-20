@@ -46,11 +46,8 @@ socket.onmessage = (msg) => {
         container.style.width = "100%";
     }
 
-    logo.style = {
-        ...logo.style,
-        width: message.width + "%",
-        height: message.height + "%"
-    };
+    logo.style.width = message.width + "%";
+    logo.style.height = message.height + "%";
 
     name.innerText = message.name;
     name.className = (message.align === "hidden")?"":"hidden";

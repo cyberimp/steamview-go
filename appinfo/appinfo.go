@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"sort"
+	"steamview-go/progress"
 	"steamview-go/steam"
 	"strings"
 )
@@ -176,6 +177,10 @@ func Parse() {
 	if err != nil {
 		panic(err)
 	}
+
+	progress.SetLength(f)
+	progress.Display()
+
 	defer func(f *os.File) {
 		_ = f.Close()
 	}(f)
@@ -196,7 +201,14 @@ func Parse() {
 
 		curApp.Root = readNode(f)
 
+		nowLength, err := f.Seek(0, 1)
+		if err != nil {
+			panic(err)
+		}
+		progress.SetValue(nowLength)
+
 		_ = readNode(f) //extra typeEndArray node at end of tree data, returns nil
 		collection = append(collection, curApp)
 	}
+	progress.Close()
 }

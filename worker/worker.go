@@ -109,7 +109,7 @@ func Serve() {
 
 func trySend() bool {
 	if panicFlag {
-		sendAll(Message{Hero: defaultHero, Align: "absolute-center", Logo: "/images/error.png"})
+		sendAll(Message{Hero: defaultHero, Align: "CenterCenter", Logo: "/images/error.png"})
 		return true
 	}
 	newAppID := steam.GetAppId()

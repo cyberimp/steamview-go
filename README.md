@@ -27,7 +27,10 @@ your Steam runtime
 
 This project needs [go-winres](https://github.com/tc-hib/go-winres) 
 for Windows and `libgtk-3-dev` `libappindicator3-dev` for Debian 
-and Ubuntu (Mint users should also install `libxapp-dev`)
+and Ubuntu (Mint users should also install `libxapp-dev`).
+Optional dependency is `zenity` binary, here is
+[macOS/Windows version](https://github.com/ncruces/zenity/releases),
+this will add progress bar for slow startup time.
 
 ## How to use
 
