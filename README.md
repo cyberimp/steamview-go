@@ -47,7 +47,8 @@ folder, it should be in same folder as binary.
 You can start Chrome on selected display with following commandline flags: 
 `--window-position=x,y`, where x,y is coordinates of point inside needed
 monitor (monitor marked as 1st has 0,0 coordinates at top left) and 
-`--kiosk`, don't forget `http://localhost:3000/` as url param.
+`--kiosk` will start it fullscreen, don't forget `http://localhost:3000/`
+as url param.
 
 Steam is &trade; & &reg; of Valve Corporation, I'm not affiliated 
 with them.
