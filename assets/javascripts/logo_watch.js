@@ -34,9 +34,11 @@ let circle = new window.ProgressBar.Circle(container,
                 prefix: true,
                 value: 'translate(-50%, -50%)'
             },
-            duration: 300,
+            duration: 30,
         }
       });
+
+let destroyed = false
 
 socket.onmessage = (msg) => {
     /**
@@ -62,12 +64,13 @@ socket.onmessage = (msg) => {
         circle.animate(message.width);
         logo.style.width = "50%";
         logo.style.height = "50%";
-        name.innerText = "Loading appinfo.vdf..."
+        name.innerText = "Loading appinfo.vdf…";
         return;
     }
-    else
+    else if (!destroyed)
     {
-        circle.destroy()
+        circle.destroy();
+        destroyed = true;
     }
 
     if (message.align === "BottomLeft" &&
@@ -79,6 +82,9 @@ socket.onmessage = (msg) => {
     {
         container.style.width = "100%";
     }
+
+    logo.style.width = message.width + "%";
+    logo.style.height = message.height + "%";
 
     name.innerText = message.name;
     name.className = (message.align === "hidden")?"":"hidden";
