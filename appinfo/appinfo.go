@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
 	"sort"
-	"steamview-go/progress"
-	"steamview-go/steam"
 	"strings"
+	"sync"
 )
 
 type magic struct {
@@ -45,6 +43,26 @@ type Node struct {
 type AppInfo struct {
 	Header appHeader
 	Root   *Node
+}
+
+var (
+	collection    []AppInfo
+	Reading       = true
+	maxProgress   int64
+	progress      int64
+	progressMutex sync.Mutex
+)
+
+func GetProgress() float32 {
+	progressMutex.Lock()
+	defer progressMutex.Unlock()
+	return float32(progress) / float32(maxProgress)
+}
+
+func setProgress(value int64) {
+	progressMutex.Lock()
+	defer progressMutex.Unlock()
+	progress = value
 }
 
 func (n *Node) String() string {
@@ -87,19 +105,31 @@ func (i *AppInfo) GetValue(path string) string {
 }
 
 func (i *AppInfo) GetAlign() string {
+	if Reading {
+		return "CenterCenter"
+	}
 	return i.GetValue("appinfo:common:library_assets:logo_position:pinned_position")
 }
 
 func (i *AppInfo) GetWidth() string {
+	if Reading {
+		return fmt.Sprintf("%f", progress)
+	}
 	return i.GetValue("appinfo:common:library_assets:logo_position:width_pct")
 }
 
 func (i *AppInfo) GetHeight() string {
+	if Reading {
+		return fmt.Sprintf("%f", progress)
+	}
 	return i.GetValue("appinfo:common:library_assets:logo_position:height_pct")
 }
 
 //GetName returns name of game
 func (i *AppInfo) GetName() string {
+	if Reading {
+		return "_VDF_READING"
+	}
 	return i.GetValue("appinfo:common:name")
 }
 
@@ -158,9 +188,14 @@ func readNode(r io.Reader) *Node {
 	return curNode
 }
 
-var collection []AppInfo
-
 func GetAppInfo(appId uint32) AppInfo {
+	if Reading {
+		return AppInfo{
+			Header: appHeader{},
+			Root:   nil,
+		}
+	}
+
 	num := sort.Search(len(collection), func(i int) bool {
 		return collection[i].Header.AppId >= appId
 	})
@@ -171,15 +206,18 @@ func GetAppInfo(appId uint32) AppInfo {
 	}
 }
 
-func Parse() {
-	f, err := os.Open(path.Join(steam.CacheRoot, "appinfo.vdf"))
+func ParseAsync(path string) {
+	f, err := os.Open(path)
 
 	if err != nil {
 		panic(err)
 	}
 
-	progress.SetLength(f)
-	progress.Display()
+	info, err := f.Stat()
+	if err != nil {
+		panic("cannot read size of file:" + err.Error())
+	}
+	maxProgress = info.Size()
 
 	defer func(f *os.File) {
 		_ = f.Close()
@@ -205,10 +243,11 @@ func Parse() {
 		if err != nil {
 			panic(err)
 		}
-		progress.SetValue(nowLength)
+
+		setProgress(nowLength)
 
 		_ = readNode(f) //extra typeEndArray node at end of tree data, returns nil
 		collection = append(collection, curApp)
 	}
-	progress.Close()
+	Reading = false
 }

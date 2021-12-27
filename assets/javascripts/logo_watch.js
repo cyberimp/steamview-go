@@ -22,6 +22,22 @@ function LogoError() {
 
 logo.onerror = LogoError;
 
+let circle = new window.ProgressBar.Circle(container,
+    {
+        color: "#fff",
+        svgStyle: {
+            position: "absolute",
+            height: "50%",
+            left: "50%",
+            top: "50%",
+            transform: {
+                prefix: true,
+                value: 'translate(-50%, -50%)'
+            },
+            duration: 300,
+        }
+      });
+
 socket.onmessage = (msg) => {
     /**
      * message from server should include this fields
@@ -36,6 +52,24 @@ socket.onmessage = (msg) => {
     let message = JSON.parse(msg.data);
 
     logo.className = message.align;
+
+    logo.onerror = LogoError;
+    logo.src = message.logo;
+    hero.src = message.hero;
+
+    if (message.name === "_VDF_READING"){
+        container.style.width = "100%";
+        circle.animate(message.width);
+        logo.style.width = "50%";
+        logo.style.height = "50%";
+        name.innerText = "Loading appinfo.vdf..."
+        return;
+    }
+    else
+    {
+        circle.destroy()
+    }
+
     if (message.align === "BottomLeft" &&
         (!message.width.includes(".") || parseFloat(message.width) > 90 ))
     {
@@ -46,13 +80,7 @@ socket.onmessage = (msg) => {
         container.style.width = "100%";
     }
 
-    logo.style.width = message.width + "%";
-    logo.style.height = message.height + "%";
-
     name.innerText = message.name;
     name.className = (message.align === "hidden")?"":"hidden";
 
-    logo.onerror = LogoError;
-    logo.src = message.logo;
-    hero.src = message.hero;
 };

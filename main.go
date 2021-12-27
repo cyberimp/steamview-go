@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path"
 	"steamview-go/appinfo"
 	"steamview-go/steam"
 	"steamview-go/trayicon"
@@ -23,7 +24,7 @@ func main() {
 	setupHandles()
 
 	log.Print("parsing appinfo.vdf...")
-	appinfo.Parse()
+	go appinfo.ParseAsync(path.Join(steam.CacheRoot, "appinfo.vdf"))
 	log.Println("OK!")
 
 	go worker.Serve()

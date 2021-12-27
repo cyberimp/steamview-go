@@ -4,6 +4,7 @@ import (
 	"golang.org/x/sys/windows/registry"
 	"log"
 	"path"
+	"steamview-go/appinfo"
 )
 
 func init() {
@@ -25,6 +26,9 @@ func init() {
 }
 
 func GetAppId() uint32 {
+	if appinfo.Reading {
+		return 0
+	}
 	k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Valve\Steam`, registry.QUERY_VALUE)
 	if err != nil {
 		log.Fatal(err, "! Do you have Steam installed?")

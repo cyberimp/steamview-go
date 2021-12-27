@@ -6,11 +6,16 @@ package steam
 import (
 	ps "github.com/shirou/gopsutil/process"
 	"regexp"
+	"steamview-go/appinfo"
 	"strconv"
 )
 
 func GetAppId() uint32 {
 	var result uint64
+
+	if appinfo.Reading {
+		return 0
+	}
 
 	split := regexp.MustCompile(`/gameoverlayui.*-gameid (\d+)$`)
 

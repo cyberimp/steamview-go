@@ -26,6 +26,7 @@ var (
 	appID        uint32
 	blocker      chan int
 	ticker       *time.Ticker
+	oldReading   = true
 )
 
 const (
@@ -66,6 +67,11 @@ func genMessage() Message {
 	width := "50"
 	height := "50"
 	name := "Steam"
+	if appinfo.Reading {
+		width = fmt.Sprintf("%f", appinfo.GetProgress())
+		name = "_VDF_READING"
+		return Message{Logo: logo, Hero: hero, Align: align, Width: width, Height: height, Name: name}
+	}
 	if appID > 0 {
 		logo = fmt.Sprintf("/cache/logo_%d.png", appID)
 		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
@@ -113,10 +119,11 @@ func trySend() bool {
 		return true
 	}
 	newAppID := steam.GetAppId()
-	if appID != newAppID || forceRefresh {
+	if appID != newAppID || forceRefresh || oldReading {
 		appID = newAppID
 		sendAll(genMessage())
 		forceRefresh = false
+		oldReading = appinfo.Reading
 	}
 	return false
 }
