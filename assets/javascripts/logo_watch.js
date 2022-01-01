@@ -25,6 +25,8 @@ logo.onerror = LogoError;
 let circle = new window.ProgressBar.Circle(container,
     {
         color: "#fff",
+        strokeWidth: 3,
+        duration: 100,
         svgStyle: {
             position: "absolute",
             height: "50%",
@@ -34,7 +36,6 @@ let circle = new window.ProgressBar.Circle(container,
                 prefix: true,
                 value: 'translate(-50%, -50%)'
             },
-            duration: 30,
         }
       });
 
