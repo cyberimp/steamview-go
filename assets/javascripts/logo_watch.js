@@ -12,7 +12,7 @@ let container = document.getElementById("container");
  * hides logo on 404
  * @returns {boolean}
  */
-function LogoError() {
+let LogoError = () => {
     logo.className = "hidden";
     name.className = "";
     container.className = "";
@@ -39,7 +39,14 @@ let circle = new window.ProgressBar.Circle(container,
         }
       });
 
-let destroyed = false
+circle.destroyed = false;
+
+circle.tryDestroy = () => {
+    if (!circle.destroyed) {
+        circle.destroy();
+        circle.destroyed = true;
+    }
+}
 
 socket.onmessage = (msg) => {
     /**
@@ -60,7 +67,7 @@ socket.onmessage = (msg) => {
     logo.src = message.logo;
     hero.src = message.hero;
 
-    if (message.name === "_VDF_READING"){
+    if (message.name === "_VDF_READING") {
         container.style.width = "100%";
         circle.animate(message.width);
         logo.style.width = "50%";
@@ -69,19 +76,15 @@ socket.onmessage = (msg) => {
         name.className = "";
         return;
     }
-    else if (!destroyed)
-    {
-        circle.destroy();
-        destroyed = true;
+    else {
+        circle.tryDestroy();
     }
 
     if (message.align === "BottomLeft" &&
-        (!message.width.includes(".") || parseFloat(message.width) > 90 ))
-    {
+        (!message.width.includes(".") || parseFloat(message.width) > 90 )) {
         container.style.width = "50%";
     }
-    else
-    {
+    else {
         container.style.width = "100%";
     }
 
@@ -93,6 +96,16 @@ socket.onmessage = (msg) => {
 
 };
 
+let setError = () => {
+    logo.src = "/images/error.png";
+    logo.className = "CenterCenter";
+    logo.style.width = "50%";
+    logo.style.height = "50%";
+    container.style.width = "100%";
+    name.className = "hidden";
+    circle.tryDestroy();
+}
+
 let tryReload = () => {
     let xhr = new XMLHttpRequest();
     xhr.onload = () => {
@@ -100,21 +113,12 @@ let tryReload = () => {
     }
 
     xhr.onerror = () => {
-        logo.src = "/images/error.png";
-        logo.className = "CenterCenter";
-        logo.style.width = "50%";
-        logo.style.height = "50%";
-        container.style.width = "100%";
-        name.className = "hidden";
-        if (!destroyed){
-            destroyed = true;
-            circle.destroy();
-        }
+        setError();
     }
     xhr.open("GET", "http://"+host+"/?_=" + new Date().getTime(),true);
     xhr.send();
 }
 
 socket.onclose = () => {
-    setTimeout(tryReload, 300)
+    setTimeout(tryReload, 300);
 }
