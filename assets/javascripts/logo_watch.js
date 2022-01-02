@@ -66,6 +66,7 @@ socket.onmessage = (msg) => {
         logo.style.width = "50%";
         logo.style.height = "50%";
         name.innerText = "Loading appinfo.vdf…";
+        name.className = "";
         return;
     }
     else if (!destroyed)
@@ -91,3 +92,29 @@ socket.onmessage = (msg) => {
     name.className = (message.align === "hidden")?"":"hidden";
 
 };
+
+let tryReload = () => {
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+        setTimeout(window.location.reload.bind(window.location), 100);
+    }
+
+    xhr.onerror = () => {
+        logo.src = "/images/error.png";
+        logo.className = "CenterCenter";
+        logo.style.width = "50%";
+        logo.style.height = "50%";
+        container.style.width = "100%";
+        name.className = "hidden";
+        if (!destroyed){
+            destroyed = true;
+            circle.destroy();
+        }
+    }
+    xhr.open("GET", "http://"+host+"/?_=" + new Date().getTime(),true);
+    xhr.send();
+}
+
+socket.onclose = () => {
+    setTimeout(tryReload, 300)
+}
