@@ -113,14 +113,14 @@ func (i *AppInfo) GetAlign() string {
 
 func (i *AppInfo) GetWidth() string {
 	if Reading {
-		return fmt.Sprintf("%f", progress)
+		return fmt.Sprintf("%f", GetProgress())
 	}
 	return i.GetValue("appinfo:common:library_assets:logo_position:width_pct")
 }
 
 func (i *AppInfo) GetHeight() string {
 	if Reading {
-		return fmt.Sprintf("%f", progress)
+		return fmt.Sprintf("%f", GetProgress())
 	}
 	return i.GetValue("appinfo:common:library_assets:logo_position:height_pct")
 }
