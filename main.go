@@ -23,9 +23,7 @@ func main() {
 
 	setupHandles()
 
-	log.Print("parsing appinfo.vdf...")
 	go appinfo.ParseAsync(path.Join(steam.CacheRoot, "appinfo.vdf"))
-	log.Println("OK!")
 
 	go worker.Serve()
 

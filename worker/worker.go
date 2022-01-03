@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+//Message is sent through websocket to clients
 type Message struct {
 	Logo   string `json:"logo"`
 	Hero   string `json:"hero"`
@@ -30,8 +31,14 @@ var (
 )
 
 const (
+	//defaultHero is transparent background
 	defaultHero = "/images/no_hero.png"
+	//defaultLogo is Steam logo
 	defaultLogo = "/images/default.png"
+	//defaultAlign is centered logo position
+	defaultAlign = "CenterCenter"
+	//errorLogo is sent on server shutdown
+	errorLogo = "/images/error.png"
 )
 
 func GetChan() (chan Message, uint) {
@@ -61,31 +68,36 @@ func sendAll(m Message) {
 }
 
 func genMessage() Message {
-	logo := defaultLogo
-	hero := defaultHero
-	align := "CenterCenter"
-	width := "50"
-	height := "50"
-	name := "Steam"
-	if appinfo.Reading {
-		width = fmt.Sprintf("%f", appinfo.GetProgress())
-		name = "_VDF_READING"
-		return Message{Logo: logo, Hero: hero, Align: align, Width: width, Height: height, Name: name}
+	result := Message{
+		Logo:   defaultLogo,
+		Hero:   defaultHero,
+		Align:  defaultAlign,
+		Width:  "50",
+		Height: "50",
+		Name:   "Steam",
 	}
+
+	if appinfo.Reading {
+		result.Width = fmt.Sprintf("%f", appinfo.GetProgress())
+		result.Name = "_VDF_READING"
+		return result
+	}
+
 	if appID > 0 {
-		logo = fmt.Sprintf("/cache/logo_%d.png", appID)
-		hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
+		result.Logo = fmt.Sprintf("/cache/logo_%d.png", appID)
+		result.Hero = fmt.Sprintf("/cache/hero_%d.jpg", appID)
 		info := appinfo.GetAppInfo(appID)
-		align = info.GetAlign()
-		name = info.GetName()
-		if align == "" {
-			align = "hidden"
+		result.Align = info.GetAlign()
+		result.Name = info.GetName()
+		if result.Align == "" {
+			result.Align = "hidden"
 		} else {
-			width = info.GetWidth()
-			height = info.GetHeight()
+			result.Width = info.GetWidth()
+			result.Height = info.GetHeight()
 		}
 	}
-	return Message{Logo: logo, Hero: hero, Align: align, Width: width, Height: height, Name: name}
+
+	return result
 }
 
 func Panic() {
@@ -102,20 +114,24 @@ func Serve() {
 	for {
 		select {
 		case <-ticker.C:
-			if trySend() {
-				return
-			}
 		case <-blocker:
-			if trySend() {
-				return
-			}
+		}
+		if trySend() {
+			return
 		}
 	}
 }
 
 func trySend() bool {
 	if panicFlag {
-		sendAll(Message{Hero: defaultHero, Align: "CenterCenter", Logo: "/images/error.png"})
+		sendAll(Message{
+			Hero:   defaultHero,
+			Align:  defaultAlign,
+			Logo:   errorLogo,
+			Width:  "50",
+			Height: "50",
+			Name:   "Error",
+		})
 		return true
 	}
 	newAppID := steam.GetAppId()
