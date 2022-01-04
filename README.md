@@ -23,6 +23,12 @@ Now works on every Steam-supported OS. If you run Steam on
 non-supported OS, please cross-compile this app for OS of
 your Steam runtime
 
+## How it works
+
+It parses `appinfo.vdf` on startup and serves cached images with
+align settings from steam library. When server stops, it displays
+error message.
+
 ## Dependencies
 
 This project needs [go-winres](https://github.com/tc-hib/go-winres) 

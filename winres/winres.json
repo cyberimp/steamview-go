@@ -14,8 +14,8 @@
     "#1": {
       "0409": {
         "identity": {
-          "name": "steamview",
-          "version": "1.0.0"
+          "name": "steam-view",
+          "version": "1.1.0"
         },
         "description": "",
         "minimum-os": "win7",
@@ -39,8 +39,8 @@
     "#1": {
       "0000": {
         "fixed": {
-          "file_version": "1.0.0.0",
-          "product_version": "1.0.0.0"
+          "file_version": "1.1.0.0",
+          "product_version": "1.1.0.0"
         },
         "info": {
           "0409": {
@@ -53,8 +53,8 @@
             "LegalTrademarks": "",
             "OriginalFilename": "",
             "PrivateBuild": "",
-            "ProductName": "steamview",
-            "ProductVersion": "1.0.0",
+            "ProductName": "steam-view",
+            "ProductVersion": "1.1.0",
             "SpecialBuild": ""
           }
         }
