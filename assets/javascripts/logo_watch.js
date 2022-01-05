@@ -10,15 +10,15 @@ const container = document.getElementById('container');
  * hides logo on 404
  * @returns {boolean}
  */
-const LogoError = () => {
+const logoError = () => {
   logo.className = 'hidden';
   name.className = '';
-  container.className = '';
+  container.style.width = '100%';
   logo.onerror = null;
   return true;
 };
 
-logo.onerror = LogoError;
+logo.onerror = logoError;
 
 const circle = new window.ProgressBar.Circle(container, {
   color: '#fff',
@@ -59,7 +59,7 @@ socket.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
 
   logo.className = message.align;
-  logo.onerror = LogoError;
+  logo.onerror = logoError;
   logo.src = message.logo;
   hero.src = message.hero;
 
@@ -88,7 +88,7 @@ socket.onmessage = (msg) => {
   name.className = (message.align === 'hidden') ? '' : 'hidden';
 };
 
-/** *
+/**
  * Displays message about server gone down
  */
 const setError = () => {
@@ -101,7 +101,7 @@ const setError = () => {
   circle.tryDestroy();
 };
 
-/** *
+/**
  * Try reloading page on socket disconnect, this includes server crashing, shutdown
  * and going into ACPI sleep state
  */
