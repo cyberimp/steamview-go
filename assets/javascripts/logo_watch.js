@@ -106,12 +106,13 @@ const setError = () => {
  * and going into ACPI sleep state
  */
 const tryReload = () => {
-  const xhr = new XMLHttpRequest();
-  xhr.onload = () => setTimeout(window.location.reload.bind(window.location), 100);
-  xhr.onerror = setError;
-  // Parameter added to force ignore cache on Chrome
-  xhr.open('GET', `http://${host}/?_=${new Date().getTime()}`, true);
-  xhr.send();
+  fetch(
+    `http://${host}/`,
+    { method: 'GET', cache: 'no-cache' }
+  ).then(
+    () => setTimeout(window.location.reload.bind(window.location), 100),
+    setError
+  );
 };
 
 socket.onclose = () => setTimeout(tryReload, 300);
