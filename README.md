@@ -31,15 +31,14 @@ error message.
 
 ## Dependencies
 
-This project needs [go-winres](https://github.com/tc-hib/go-winres) 
-for Windows and `libgtk-3-dev` `libappindicator3-dev` for Debian 
-and Ubuntu (Mint users should also install `libxapp-dev`).
+This project needs `libgtk-3-dev` `libappindicator3-dev` packages for 
+Debian and Ubuntu (Mint users should also install `libxapp-dev`).
 
 ## How to use
 
 Run `go build` in project directory, and you are ready to go.
-For Windows use `go generate` and `go build -ldflags "-H=windowsgui"`
-Start `steamview-go.exe` in project directory, and it will connect to
+For Windows use `go build -ldflags "-H=windowsgui"`. 
+Start `steamview-go.exe` in project directory, and connect to
 <http://YOUR_IP:3000> with your default browser (don't forget to 
 drag it to your cool monitor, modded into case and put it in 
 fullscreen mode). When moving exe file around, don't forget `assets` 
