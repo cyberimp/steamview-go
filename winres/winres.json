@@ -15,7 +15,7 @@
       "0409": {
         "identity": {
           "name": "steam-view",
-          "version": "1.1.0"
+          "version": "1.2.0"
         },
         "description": "",
         "minimum-os": "win7",
@@ -39,8 +39,8 @@
     "#1": {
       "0000": {
         "fixed": {
-          "file_version": "1.1.0.0",
-          "product_version": "1.1.0.0"
+          "file_version": "1.2.0.0",
+          "product_version": "1.2.0.0"
         },
         "info": {
           "0409": {
@@ -54,7 +54,7 @@
             "OriginalFilename": "",
             "PrivateBuild": "",
             "ProductName": "steam-view",
-            "ProductVersion": "1.1.0",
+            "ProductVersion": "1.2.0",
             "SpecialBuild": ""
           }
         }
