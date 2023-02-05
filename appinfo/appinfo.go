@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"sort"
 	"strings"
@@ -23,6 +24,7 @@ type appHeader struct {
 	PicsToken    uint64
 	SHA1         [20]byte
 	ChangeNumber uint32
+	AppSHA1      [20]byte //added on dec 2022
 }
 
 const (
@@ -125,7 +127,7 @@ func (i *AppInfo) GetHeight() string {
 	return i.GetValue("appinfo:common:library_assets:logo_position:height_pct")
 }
 
-//GetName returns name of game
+// GetName returns name of game
 func (i *AppInfo) GetName() string {
 	if Reading {
 		return "_VDF_READING"
@@ -142,7 +144,7 @@ func readUint32(f io.Reader) string {
 	return fmt.Sprintf("%d", ch)
 }
 
-//readCString reads C string of variable width from file
+// readCString reads C string of variable width from file
 func readCString(f io.Reader) string {
 	var sb strings.Builder
 	ch := make([]byte, 1)
@@ -158,7 +160,7 @@ func readCString(f io.Reader) string {
 	}
 }
 
-//readNode reads tree recursively
+// readNode reads tree recursively
 func readNode(r io.Reader) *Node {
 	curNode := new(Node)
 	var nodeType byte
@@ -182,7 +184,7 @@ func readNode(r io.Reader) *Node {
 		curNode.Name = readCString(r)
 		curNode.Value = readUint32(r)
 	default:
-		panic("unfinished parse!")
+		log.Fatal("node type:", nodeType, " unknown!")
 	}
 
 	return curNode
