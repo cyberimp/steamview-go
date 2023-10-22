@@ -3,6 +3,8 @@ package main
 
 import (
 	"context"
+	"embed"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -17,6 +19,9 @@ import (
 	"syscall"
 	"time"
 )
+
+//go:embed assets
+var assets embed.FS
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -72,7 +77,13 @@ func main() {
 }
 
 func setupHandles() {
+	var staticFS = fs.FS(assets)
+	htmlContent, err := fs.Sub(staticFS, "assets")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fs := http.FileServer(http.FS(htmlContent))
 	http.HandleFunc("/socket", wsserver.ServeWs)
 	http.HandleFunc("/cache/", steam.ServeCache)
-	http.Handle("/", http.FileServer(http.Dir("./assets")))
+	http.Handle("/", fs)
 }

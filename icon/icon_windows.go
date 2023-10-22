@@ -1,3 +1,6 @@
 package icon
 
-var iconPath = "assets/icons/favicon.ico"
+import _ "embed"
+
+//go:embed icons/favicon.ico
+var icon []byte

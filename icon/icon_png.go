@@ -3,4 +3,7 @@
 
 package icon
 
-var iconPath = "assets/icons/favicon-32x32.png"
+import _ "embed"
+
+//go:embed icons/favicon-32x32.png
+var icon byte[]

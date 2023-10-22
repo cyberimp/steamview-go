@@ -41,8 +41,7 @@ For Windows use `go build -ldflags "-H=windowsgui"`.
 Start `steamview-go.exe` in project directory, and connect to
 <http://YOUR_IP:3000> with your default browser (don't forget to 
 drag it to your cool monitor, modded into case and put it in 
-fullscreen mode). When moving exe file around, don't forget `assets` 
-folder, it should be in same folder as binary.
+fullscreen mode).
 
 ## Google Chrome startup flags
 
