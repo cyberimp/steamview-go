@@ -31,7 +31,7 @@ error message.
 
 ## Dependencies
 
-This project needs `libgtk-3-dev` `libappindicator3-dev` packages for 
+This project needs `libgtk-3-dev` `libayatana-appindicator3-dev` packages for 
 Debian and Ubuntu (Mint users should also install `libxapp-dev`).
 
 ## How to use
