@@ -4,6 +4,7 @@ package main
 import (
 	"context"
 	"embed"
+	"errors"
 	"io/fs"
 	"log"
 	"net"
@@ -43,7 +44,7 @@ func main() {
 	})
 
 	go func() {
-		if err := httpServer.ListenAndServe(); err != http.ErrServerClosed {
+		if err := httpServer.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("HTTP server ListenAndServe: %v", err)
 		}
 	}()
@@ -52,9 +53,9 @@ func main() {
 
 	signal.Notify(
 		signalChan,
-		syscall.SIGHUP,  // kill -SIGHUP XXXX
-		syscall.SIGINT,  // kill -SIGINT XXXX or Ctrl+c
-		syscall.SIGQUIT, // kill -SIGQUIT XXXX
+		syscall.SIGHUP,  // kill -SIGHUP processID
+		syscall.SIGINT,  // kill -SIGINT processID or Ctrl+c
+		syscall.SIGQUIT, // kill -SIGQUIT processID
 	)
 
 	quitChan := make(chan struct{})
@@ -76,14 +77,22 @@ func main() {
 	cancel()
 }
 
+func ServeFSCached(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=2592000")
+		w.Header().Set("ETag", "v1")
+		next.ServeHTTP(w, r)
+	})
+}
+
 func setupHandles() {
 	var staticFS = fs.FS(assets)
 	htmlContent, err := fs.Sub(staticFS, "assets")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fs := http.FileServer(http.FS(htmlContent))
+	ServeFs := http.FileServer(http.FS(htmlContent))
 	http.HandleFunc("/socket", wsserver.ServeWs)
 	http.HandleFunc("/cache/", steam.ServeCache)
-	http.Handle("/", fs)
+	http.Handle("/", ServeFSCached(ServeFs))
 }
