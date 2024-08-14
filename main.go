@@ -17,6 +17,7 @@ import (
 	"steamview-go/trayicon"
 	"steamview-go/worker"
 	"steamview-go/wsserver"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -24,9 +25,15 @@ import (
 //go:embed assets
 var assets embed.FS
 
+//go:embed md5sums.txt
+var sums string
+
+var sumsMap map[string]string
+
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
+	parseSums()
 	setupHandles()
 
 	go appinfo.ParseAsync(path.Join(steam.CacheRoot, "appinfo.vdf"))
@@ -77,10 +84,22 @@ func main() {
 	cancel()
 }
 
+func parseSums() {
+	sumsSlice := strings.Fields(sums)
+	sumsMap = map[string]string{}
+	for i := 0; i < len(sumsSlice); i += 2 {
+		if sumsSlice[i+1] == "index.html" {
+			sumsMap["/"] = sumsSlice[i]
+		}
+		sumsMap["/"+strings.ReplaceAll(sumsSlice[i+1], "\\", "/")] = sumsSlice[i]
+	}
+}
+
 func ServeFSCached(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=2592000")
-		w.Header().Set("ETag", "v1")
+		md5Sum := sumsMap[r.URL.Path]
+		w.Header().Set("ETag", md5Sum)
 		next.ServeHTTP(w, r)
 	})
 }
